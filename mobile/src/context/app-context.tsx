@@ -31,6 +31,7 @@ const defaultSettings: AppSettings = {
   displayName: defaultLocale === 'ko' ? '내일의 나' : 'Tomorrow Me',
   communityHandle: '@pillowhero',
   autoSaveToLibrary: true,
+  defaultShareToCommunity: false,
 };
 
 const defaultPermissions: AppPermissions = {
@@ -167,7 +168,7 @@ export function AppProvider({ children }: PropsWithChildren) {
     const hydrate = async () => {
       const state = await loadPersistedState();
       if (state) {
-        setSettings(state.settings);
+        setSettings({ ...defaultSettings, ...state.settings });
         setRecordings(state.recordings);
         setChallenges(state.challenges.map(reconcileChallenge));
         setFeed(state.feed.length ? state.feed : buildFallbackFeed());

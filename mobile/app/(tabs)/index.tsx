@@ -4,12 +4,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Camera, CameraView } from 'expo-camera';
 import { useRef, useState } from 'react';
-import { Alert, Linking, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { VideoPreview } from '@/src/components/video-preview';
-import { Badge, PrimaryButton, SecondaryButton } from '@/src/components/ui';
 import { theme } from '@/src/constants/theme';
 import { useApp } from '@/src/context/app-context';
 import { buildDefaultWakeDate, formatDateTime } from '@/src/lib/format';
@@ -18,17 +17,15 @@ export default function CaptureScreen() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView | null>(null);
-  const { permissions, requestAllPermissions, saveShout, settings, syncPermissions } = useApp();
+  const { permissions, saveShout, settings, syncPermissions } = useApp();
   const [wakeAt, setWakeAt] = useState(buildDefaultWakeDate());
-  const [note, setNote] = useState('');
-  const [shareToCommunity, setShareToCommunity] = useState(true);
-  const [saveToLibrary, setSaveToLibrary] = useState(settings.autoSaveToLibrary);
   const [showPicker, setShowPicker] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [pendingVideoUri, setPendingVideoUri] = useState<string | null>(null);
 
   const captureGranted = permissions.camera === 'granted' && permissions.microphone === 'granted';
-  const allGranted = Object.values(permissions).every((status) => status === 'granted');
+  const wakeLabel = formatDateTime(wakeAt.toISOString(), settings.locale);
+  const generatedNote = t('capture.autoNote', { time: wakeLabel });
 
   const requestCapturePermissions = async () => {
     const [cameraPermission, microphonePermission] = await Promise.all([
@@ -82,14 +79,13 @@ export default function CaptureScreen() {
 
     await saveShout({
       videoUri: pendingVideoUri,
-      note,
+      note: generatedNote,
       wakeAt: wakeAt.toISOString(),
-      shareToCommunity,
-      saveToLibrary,
+      shareToCommunity: settings.defaultShareToCommunity,
+      saveToLibrary: settings.autoSaveToLibrary,
     });
 
     setPendingVideoUri(null);
-    setNote('');
     setWakeAt(buildDefaultWakeDate());
     Alert.alert(t('capture.saved'), t('capture.savedBody'));
   };
@@ -104,99 +100,74 @@ export default function CaptureScreen() {
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="front" mode="video" mirror />
       ) : (
         <View style={styles.cameraFallback}>
-          <MaterialCommunityIcons name="camera-outline" size={64} color={theme.colors.textMuted} />
+          <MaterialCommunityIcons name="camera-outline" size={56} color={theme.colors.textMuted} />
           <Text style={styles.cameraFallbackText}>{t('capture.permissionsTitle')}</Text>
           <Text style={styles.cameraFallbackSubtext}>{t('capture.permissionsBody')}</Text>
         </View>
       )}
 
-      <LinearGradient colors={['rgba(4,7,18,0.92)', 'rgba(4,7,18,0.25)', 'rgba(4,7,18,0.96)']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['rgba(4,7,18,0.48)', 'rgba(4,7,18,0.03)', 'rgba(4,7,18,0.58)']} style={StyleSheet.absoluteFill} />
 
       <SafeAreaView style={styles.overlay} edges={['top', 'left', 'right']}>
-        <View style={styles.topBar}>
-          <View style={styles.brandBlock}>
-            <Text style={styles.eyebrow}>{t('appName')}</Text>
-            <Text style={styles.title}>{pendingVideoUri ? t('capture.reviewTitle') : t('capture.title')}</Text>
+        <View style={styles.topHud}>
+          <Text style={styles.brandText}>{t('appName')}</Text>
+          <View style={[styles.statusDot, captureGranted ? styles.statusReady : styles.statusWarning]} />
+        </View>
+
+        {isRecording ? (
+          <View style={styles.recordingPill}>
+            <View style={styles.liveDot} />
+            <Text style={styles.recordingText}>{t('capture.recordingShort')}</Text>
           </View>
-          <Badge label={captureGranted ? t('capture.ready') : t('capture.capturePermissionNeeded')} tone={captureGranted ? 'success' : 'warning'} />
-        </View>
+        ) : null}
 
-        <View style={styles.promptPanel}>
-          <MaterialCommunityIcons name={isRecording ? 'microphone' : 'weather-night'} size={22} color={theme.colors.mint} />
-          <Text style={styles.promptText}>{isRecording ? t('capture.recording') : t('capture.fullScreenPrompt')}</Text>
-        </View>
-
-        <View style={styles.bottomSheet}>
-          <TouchableOpacity style={styles.wakeButton} onPress={() => setShowPicker(true)}>
-            <View>
-              <Text style={styles.controlLabel}>{t('common.wakeAt')}</Text>
-              <Text style={styles.wakeValue}>{formatDateTime(wakeAt.toISOString(), settings.locale)}</Text>
-            </View>
-            <MaterialCommunityIcons name="clock-edit-outline" size={24} color={theme.colors.text} />
-          </TouchableOpacity>
-
+        <View style={styles.bottomControls}>
           {showPicker ? (
-            <DateTimePicker
-              value={wakeAt}
-              mode="datetime"
-              onChange={(_, selectedDate) => {
-                setShowPicker(false);
-                if (selectedDate) {
-                  setWakeAt(selectedDate);
-                }
-              }}
-            />
+            <View style={styles.pickerShell}>
+              <DateTimePicker
+                value={wakeAt}
+                mode="datetime"
+                display="compact"
+                onChange={(_, selectedDate) => {
+                  setShowPicker(false);
+                  if (selectedDate) {
+                    setWakeAt(selectedDate);
+                  }
+                }}
+              />
+            </View>
           ) : null}
 
-          <TextInput
-            multiline
-            value={note}
-            onChangeText={setNote}
-            placeholder={t('capture.notePlaceholder')}
-            placeholderTextColor="rgba(255,255,255,0.62)"
-            style={styles.noteInput}
-          />
-
-          <View style={styles.optionGrid}>
-            <View style={styles.optionPill}>
-              <Text style={styles.optionText}>{t('capture.shareShort')}</Text>
-              <Switch value={shareToCommunity} onValueChange={setShareToCommunity} trackColor={{ true: theme.colors.accent }} />
+          {pendingVideoUri ? (
+            <View style={styles.reviewRow}>
+              <TouchableOpacity style={styles.secondaryMiniButton} onPress={() => setPendingVideoUri(null)}>
+                <Text style={styles.secondaryMiniText}>{t('capture.retake')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.primaryMiniButton} onPress={() => void handleSave()}>
+                <Text style={styles.primaryMiniText}>{t('capture.saveShout')}</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.optionPill}>
-              <Text style={styles.optionText}>{t('capture.libraryShort')}</Text>
-              <Switch value={saveToLibrary} onValueChange={setSaveToLibrary} trackColor={{ true: theme.colors.mint }} />
-            </View>
-          </View>
-
-          <View style={styles.actionRow}>
-            {pendingVideoUri ? (
-              <>
-                <SecondaryButton label={t('common.cancel')} onPress={() => setPendingVideoUri(null)} />
-                <PrimaryButton label={t('capture.saveShout')} onPress={() => void handleSave()} />
-              </>
-            ) : (
-              <>
-                <TouchableOpacity
-                  onPress={isRecording ? stopRecording : startRecording}
-                  style={[styles.recordButton, isRecording && styles.recordingButton]}>
-                  <MaterialCommunityIcons name={isRecording ? 'stop' : 'record-rec'} size={38} color="#fff" />
-                </TouchableOpacity>
-                <View style={styles.recordCopy}>
-                  <Text style={styles.recordTitle}>{isRecording ? t('capture.stop') : t('capture.record')}</Text>
-                  <Text style={styles.recordSubtitle}>{t('capture.challengeHint')}</Text>
+          ) : (
+            <View style={styles.captureRow}>
+              <TouchableOpacity style={styles.timeChip} onPress={() => setShowPicker(true)}>
+                <MaterialCommunityIcons name="clock-outline" size={16} color={theme.colors.text} />
+                <View style={styles.timeCopy}>
+                  <Text style={styles.timeLabel}>{t('common.wakeAt')}</Text>
+                  <Text numberOfLines={1} style={styles.timeValue}>{wakeLabel}</Text>
                 </View>
-              </>
-            )}
-          </View>
+              </TouchableOpacity>
 
-          {!allGranted ? (
-            <TouchableOpacity style={styles.permissionLink} onPress={() => void requestAllPermissions()}>
-              <Text style={styles.permissionLinkText}>{t('capture.requestOptionalPermissions')}</Text>
-            </TouchableOpacity>
-          ) : null}
+              <TouchableOpacity
+                onPress={isRecording ? stopRecording : startRecording}
+                style={[styles.recordButton, isRecording && styles.recordingButton]}>
+                <MaterialCommunityIcons name={isRecording ? 'stop' : 'record-rec'} size={26} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          )}
+
           {permissions.camera === 'denied' || permissions.microphone === 'denied' ? (
-            <TouchableOpacity style={styles.permissionLink} onPress={() => void Linking.openSettings()}>
-              <Text style={styles.permissionLinkText}>{t('common.openSettings')}</Text>
+            <TouchableOpacity style={styles.settingsLink} onPress={() => void Linking.openSettings()}>
+              <Text style={styles.settingsLinkText}>{t('common.openSettings')}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -232,161 +203,156 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: 104,
+    paddingHorizontal: 14,
+    paddingBottom: 96,
   },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: theme.spacing.md,
-    paddingTop: theme.spacing.sm,
-  },
-  brandBlock: {
-    flex: 1,
-    gap: 4,
-  },
-  eyebrow: {
-    color: theme.colors.mint,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  title: {
-    color: theme.colors.text,
-    fontSize: 28,
-    fontWeight: '900',
-    textShadowColor: 'rgba(0,0,0,0.35)',
-    textShadowRadius: 12,
-  },
-  promptPanel: {
-    alignSelf: 'center',
-    maxWidth: 320,
-    borderRadius: theme.radius.lg,
-    padding: theme.spacing.md,
-    backgroundColor: 'rgba(9,17,34,0.58)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  promptText: {
-    flex: 1,
-    color: theme.colors.text,
-    fontWeight: '800',
-    lineHeight: 21,
-  },
-  bottomSheet: {
-    gap: 12,
-    borderRadius: 30,
-    padding: theme.spacing.md,
-    backgroundColor: 'rgba(11,16,32,0.86)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.16)',
-    shadowColor: '#000',
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 12 },
-  },
-  wakeButton: {
-    minHeight: 62,
-    borderRadius: 22,
-    paddingHorizontal: theme.spacing.md,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  controlLabel: {
-    color: theme.colors.textMuted,
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  wakeValue: {
-    color: theme.colors.text,
-    fontSize: 17,
-    fontWeight: '900',
-  },
-  noteInput: {
-    minHeight: 72,
-    maxHeight: 110,
-    borderRadius: 22,
-    padding: theme.spacing.md,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    color: theme.colors.text,
-    textAlignVertical: 'top',
-    fontWeight: '700',
-  },
-  optionGrid: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  optionPill: {
-    flex: 1,
-    minHeight: 48,
-    borderRadius: theme.radius.pill,
-    paddingLeft: theme.spacing.md,
-    paddingRight: 6,
-    backgroundColor: 'rgba(255,255,255,0.10)',
+  topHud: {
+    alignSelf: 'flex-start',
+    minHeight: 32,
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    backgroundColor: 'rgba(4,7,18,0.32)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.10)',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 4,
+    gap: 8,
   },
-  optionText: {
+  brandText: {
     color: theme.colors.text,
     fontSize: 12,
-    fontWeight: '800',
-    flexShrink: 1,
+    fontWeight: '900',
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
   },
-  actionRow: {
-    minHeight: 88,
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  statusReady: {
+    backgroundColor: theme.colors.success,
+  },
+  statusWarning: {
+    backgroundColor: theme.colors.warning,
+  },
+  recordingPill: {
+    alignSelf: 'center',
+    borderRadius: theme.radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: 'rgba(255,93,122,0.82)',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.md,
+    gap: 8,
+  },
+  liveDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#fff',
+  },
+  recordingText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  bottomControls: {
+    gap: 8,
+  },
+  pickerShell: {
+    alignSelf: 'flex-start',
+    borderRadius: theme.radius.md,
+    padding: 6,
+    backgroundColor: 'rgba(11,16,32,0.72)',
+  },
+  captureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  timeChip: {
+    maxWidth: 210,
+    minHeight: 46,
+    borderRadius: 23,
+    paddingLeft: 12,
+    paddingRight: 14,
+    backgroundColor: 'rgba(11,16,32,0.58)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.14)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  timeCopy: {
+    flexShrink: 1,
+    gap: 1,
+  },
+  timeLabel: {
+    color: 'rgba(255,255,255,0.68)',
+    fontSize: 10,
+    fontWeight: '900',
+  },
+  timeValue: {
+    color: theme.colors.text,
+    fontSize: 13,
+    fontWeight: '900',
   },
   recordButton: {
-    width: 82,
-    height: 82,
-    borderRadius: 41,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.accent,
-    borderWidth: 5,
-    borderColor: 'rgba(255,255,255,0.78)',
+    borderWidth: 3,
+    borderColor: 'rgba(255,255,255,0.82)',
   },
   recordingButton: {
     backgroundColor: theme.colors.danger,
   },
-  recordCopy: {
-    flex: 1,
-    gap: 4,
+  reviewRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
   },
-  recordTitle: {
+  secondaryMiniButton: {
+    minHeight: 44,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(11,16,32,0.62)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.16)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryMiniText: {
     color: theme.colors.text,
-    fontSize: 18,
     fontWeight: '900',
   },
-  recordSubtitle: {
-    color: theme.colors.textMuted,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '700',
-  },
-  permissionLink: {
+  primaryMiniButton: {
+    minHeight: 44,
+    borderRadius: 22,
+    paddingHorizontal: 18,
+    backgroundColor: theme.colors.accent,
     alignItems: 'center',
-    paddingVertical: 4,
+    justifyContent: 'center',
   },
-  permissionLinkText: {
+  primaryMiniText: {
+    color: '#fff',
+    fontWeight: '900',
+  },
+  settingsLink: {
+    alignSelf: 'flex-end',
+    borderRadius: theme.radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: 'rgba(11,16,32,0.62)',
+  },
+  settingsLinkText: {
     color: theme.colors.mint,
-    fontWeight: '800',
+    fontWeight: '900',
+    fontSize: 12,
   },
 });

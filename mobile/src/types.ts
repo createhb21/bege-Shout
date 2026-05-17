@@ -11,6 +11,7 @@ export interface AppSettings {
   displayName: string;
   communityHandle: string;
   autoSaveToLibrary: boolean;
+  defaultShareToCommunity: boolean;
 }
 
 export interface AppPermissions {

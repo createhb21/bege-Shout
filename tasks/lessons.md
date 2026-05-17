@@ -7,3 +7,4 @@
 - For Expo Go prototypes, never gate core capture on optional media-library or notification permissions; Android/Expo Go limitations can make optional permissions look unavailable even when camera recording should work.
 - In camera screens, request permissions before checking a camera ref; without permission the preview is not mounted, so a ref-first guard makes the record button silently do nothing.
 - For camera-first mobile experiences, make the preview the full-screen base layer and float wake-time/metadata controls as high-contrast overlays; card layouts make recording feel secondary.
+- When users say the camera UI is cluttered, remove controls from capture rather than restyling them; move defaults such as sharing and album save to settings and leave only compact time plus record controls over video.

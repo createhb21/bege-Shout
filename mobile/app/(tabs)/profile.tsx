@@ -51,6 +51,15 @@ export default function ProfileScreen() {
         </View>
       </SectionCard>
 
+
+      <SectionCard>
+        <SectionTitle title={t('profile.defaultShare')} subtitle={t('profile.defaultShareHint')} />
+        <View style={styles.switchRow}>
+          <Text style={styles.switchLabel}>{t('profile.defaultShare')}</Text>
+          <Switch value={settings.defaultShareToCommunity} onValueChange={(value) => updateSettings({ defaultShareToCommunity: value })} trackColor={{ true: theme.colors.accent }} />
+        </View>
+      </SectionCard>
+
       <SectionCard>
         <SectionTitle title={t('profile.permissions')} subtitle={t('capture.permissionsBody')} />
         <View style={styles.badgeRow}>
