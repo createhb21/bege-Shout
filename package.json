@@ -1,0 +1,16 @@
+{
+  "name": "bege-shout",
+  "private": true,
+  "scripts": {
+    "mobile": "cd mobile && npm run start",
+    "android": "cd mobile && npm run android",
+    "ios": "cd mobile && npm run ios",
+    "web": "cd mobile && npm run web",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "seed:videos": "cd server && npm run seed:videos",
+    "typecheck": "npm run typecheck:mobile && npm run typecheck:server",
+    "typecheck:mobile": "cd mobile && npm run typecheck",
+    "typecheck:server": "cd server && npm run typecheck"
+  }
+}

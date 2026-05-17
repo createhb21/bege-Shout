@@ -1,0 +1,62 @@
+import type { FeedDatabase } from './types.js';
+
+export const seedDatabase: FeedDatabase = {
+  posts: [
+    {
+      id: 'post-seoul-night-walk',
+      authorName: 'Mina',
+      caption: 'Late-night campus walk check-in. Tiny victories still count. 🌙',
+      location: 'Seoul',
+      tags: ['night', 'campus', 'daily'],
+      videoUrl: '/videos/sample-night-walk.mp4',
+      videoFilename: 'sample-night-walk.mp4',
+      likes: 14,
+      comments: [
+        {
+          id: 'comment-seoul-night-walk-1',
+          authorName: 'Jun',
+          text: 'Mood is immaculate.',
+          createdAt: '2026-05-15T20:41:00.000Z'
+        }
+      ],
+      createdAt: '2026-05-15T20:30:00.000Z'
+    },
+    {
+      id: 'post-han-river-sunset',
+      authorName: 'Ara',
+      caption: 'Han river sunset and a quick positivity shout before dinner.',
+      location: 'Han River Park',
+      tags: ['sunset', 'river', 'shout'],
+      videoUrl: '/videos/sample-sunset-loop.mp4',
+      videoFilename: 'sample-sunset-loop.mp4',
+      likes: 27,
+      comments: [
+        {
+          id: 'comment-han-river-sunset-1',
+          authorName: 'Dae',
+          text: 'This should be the app splash video.',
+          createdAt: '2026-05-16T10:13:00.000Z'
+        },
+        {
+          id: 'comment-han-river-sunset-2',
+          authorName: 'Yuri',
+          text: 'Love the colors here.',
+          createdAt: '2026-05-16T10:20:00.000Z'
+        }
+      ],
+      createdAt: '2026-05-16T09:58:00.000Z'
+    },
+    {
+      id: 'post-studio-morning',
+      authorName: 'Theo',
+      caption: 'Morning studio setup before recording today’s shout.',
+      location: 'Bege Studio',
+      tags: ['studio', 'morning', 'creator'],
+      videoUrl: '/videos/sample-studio-pulse.mp4',
+      videoFilename: 'sample-studio-pulse.mp4',
+      likes: 9,
+      comments: [],
+      createdAt: '2026-05-17T07:45:00.000Z'
+    }
+  ]
+};
