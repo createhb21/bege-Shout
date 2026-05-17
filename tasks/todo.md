@@ -30,3 +30,4 @@
 - README now documents run flow, local-only constraint, device URL notes, and verification commands.
 - Remaining prototype risk: camera recording, local notifications, and permission UX were statically/bundle validated but not fully exercised on a real iOS/Android device inside this session.
 - Follow-up bugfix: changed capture recording to require only camera+microphone permissions, because Expo Go may limit media-library/notification capability and should not block recording.
+- Follow-up UI improvement: capture tab is now full-screen camera/video with high-contrast overlay controls for wake time, note, save/share options, and recording actions.

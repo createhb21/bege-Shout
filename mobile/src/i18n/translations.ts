@@ -50,6 +50,10 @@ export const resources = {
         notePlaceholder: 'Pillow, I must wake up at 7:30. No mercy tomorrow.',
         challengeHint: 'The next-morning challenge will count as success if you check in within 10 minutes after the target time.',
         tapAgainWhenReady: 'The camera is waking up. Tap record again after the selfie preview appears.',
+        fullScreenPrompt: 'Fill the screen with your face and pillow, then say the exact wake-up time out loud.',
+        shareShort: 'Share',
+        libraryShort: 'Library',
+        requestOptionalPermissions: 'Allow album + notification permissions for save/alarm features',
       },
       history: {
         title: 'Shout archive',
@@ -161,6 +165,10 @@ export const resources = {
         notePlaceholder: '배게야, 내일 7시 30분에 꼭 깨워줘. 절대 봐주지 마.',
         challengeHint: '다음날 설정 시각 이후 10분 안에 체크인하면 챌린지 성공으로 계산합니다.',
         tapAgainWhenReady: '카메라가 켜지는 중이에요. 셀카 화면이 보이면 녹화 버튼을 한 번 더 눌러주세요.',
+        fullScreenPrompt: '얼굴과 배게가 화면에 꽉 차게 잡히면, 원하는 기상 시간을 소리 내서 말해보세요.',
+        shareShort: '공유',
+        libraryShort: '앨범',
+        requestOptionalPermissions: '저장/알람 기능을 위해 앨범+알림 권한도 허용하기',
       },
       history: {
         title: '샤우트 아카이브',

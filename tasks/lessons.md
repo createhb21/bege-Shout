@@ -6,3 +6,4 @@
 - After server smoke tests that mutate seed JSON, immediately restore deterministic seed state before final verification or commit.
 - For Expo Go prototypes, never gate core capture on optional media-library or notification permissions; Android/Expo Go limitations can make optional permissions look unavailable even when camera recording should work.
 - In camera screens, request permissions before checking a camera ref; without permission the preview is not mounted, so a ref-first guard makes the record button silently do nothing.
+- For camera-first mobile experiences, make the preview the full-screen base layer and float wake-time/metadata controls as high-contrast overlays; card layouts make recording feel secondary.

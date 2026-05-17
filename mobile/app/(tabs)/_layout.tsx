@@ -44,10 +44,16 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: '#0D1329',
-          borderTopColor: theme.colors.border,
-          height: 84,
+          position: 'absolute',
+          left: 14,
+          right: 14,
+          bottom: 10,
+          borderRadius: 28,
+          backgroundColor: 'rgba(13,19,41,0.88)',
+          borderTopColor: 'transparent',
+          height: 76,
           paddingTop: 8,
+          paddingBottom: 10,
         },
         tabBarActiveTintColor: theme.colors.text,
         tabBarInactiveTintColor: theme.colors.textMuted,
@@ -65,6 +71,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: t('tabs.capture'),
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons name={focused ? 'camera' : 'camera-outline'} size={22} color={color} />
           ),
