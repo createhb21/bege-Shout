@@ -18,8 +18,8 @@ export function AppScreen({ children, scroll = true }: PropsWithChildren<{ scrol
 
 export function HeroCard({ children }: PropsWithChildren) {
   return (
-    <LinearGradient colors={['#1D2650', '#0F1530']} style={styles.heroCard}>
-      {children}
+    <LinearGradient colors={theme.gradients.aurora} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.heroOuter}>
+      <View style={styles.heroInner}>{children}</View>
     </LinearGradient>
   );
 }
@@ -30,7 +30,7 @@ export function SectionCard({ children }: PropsWithChildren) {
 
 export function SectionTitle({ eyebrow, title, subtitle }: { eyebrow?: string; title: string; subtitle?: string }) {
   return (
-    <View style={{ gap: 6 }}>
+    <View style={{ gap: 7 }}>
       {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
@@ -51,6 +51,7 @@ export function PrimaryButton({
 }) {
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.primaryButton, disabled && styles.disabledButton]}>
+      <LinearGradient colors={theme.gradients.brand} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       {icon}
       <Text style={styles.primaryButtonText}>{label}</Text>
     </TouchableOpacity>
@@ -68,13 +69,13 @@ export function SecondaryButton({ label, onPress }: { label: string; onPress: ()
 export function Badge({ label, tone = 'default' }: { label: string; tone?: 'default' | 'accent' | 'success' | 'warning' | 'danger' }) {
   const backgroundColor =
     tone === 'accent'
-      ? 'rgba(124,108,255,0.18)'
+      ? 'rgba(255,45,122,0.18)'
       : tone === 'success'
-        ? 'rgba(67,224,161,0.18)'
+        ? 'rgba(50,230,161,0.18)'
         : tone === 'warning'
-          ? 'rgba(255,199,95,0.18)'
+          ? 'rgba(255,209,102,0.18)'
           : tone === 'danger'
-            ? 'rgba(255,93,122,0.18)'
+            ? 'rgba(255,70,104,0.18)'
             : 'rgba(255,255,255,0.08)';
 
   return (
@@ -108,111 +109,127 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   content: {
-    padding: theme.spacing.lg,
+    padding: theme.spacing.md,
     gap: theme.spacing.lg,
-    paddingBottom: 120,
+    paddingBottom: 122,
   },
-  heroCard: {
-    borderRadius: theme.radius.lg,
+  heroOuter: {
+    borderRadius: theme.radius.xl,
+    padding: 1,
+    ...theme.shadow.card,
+  },
+  heroInner: {
+    borderRadius: theme.radius.xl - 1,
     padding: theme.spacing.lg,
+    backgroundColor: 'rgba(5,5,7,0.80)',
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: 'rgba(255,255,255,0.12)',
     gap: theme.spacing.md,
+    overflow: 'hidden',
   },
   sectionCard: {
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
     padding: theme.spacing.md,
-    backgroundColor: theme.colors.card,
+    backgroundColor: theme.colors.surfaceGlass,
     borderWidth: 1,
     borderColor: theme.colors.border,
     gap: theme.spacing.md,
+    ...theme.shadow.card,
   },
   eyebrow: {
-    color: theme.colors.mint,
-    fontSize: 12,
-    fontWeight: '700',
+    color: theme.colors.accentAlt,
+    fontSize: 11,
+    fontWeight: '900',
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.2,
   },
   title: {
     color: theme.colors.text,
-    fontSize: 28,
-    fontWeight: '800',
+    fontSize: 29,
+    fontWeight: '900',
+    letterSpacing: -0.6,
   },
   subtitle: {
     color: theme.colors.textMuted,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 21,
   },
   primaryButton: {
-    minHeight: 54,
+    minHeight: 52,
     borderRadius: theme.radius.pill,
     paddingHorizontal: theme.spacing.lg,
-    backgroundColor: theme.colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 10,
+    overflow: 'hidden',
   },
   disabledButton: {
     opacity: 0.5,
   },
   primaryButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '800',
+    fontSize: 15,
+    fontWeight: '900',
   },
   secondaryButton: {
     minHeight: 46,
     borderRadius: theme.radius.pill,
     paddingHorizontal: theme.spacing.md,
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: theme.colors.borderStrong,
+    backgroundColor: 'rgba(255,255,255,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   secondaryButtonText: {
     color: theme.colors.text,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   badge: {
     borderRadius: theme.radius.pill,
     paddingHorizontal: 12,
     paddingVertical: 6,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
   badgeText: {
     color: theme.colors.text,
-    fontWeight: '700',
-    fontSize: 12,
+    fontWeight: '800',
+    fontSize: 11,
   },
   statPill: {
     flex: 1,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.cardAlt,
+    borderRadius: theme.radius.lg,
+    backgroundColor: 'rgba(255,255,255,0.08)',
     padding: theme.spacing.md,
     gap: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.10)',
   },
   statValue: {
     color: theme.colors.text,
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: '900',
+    letterSpacing: -0.5,
   },
   statLabel: {
     color: theme.colors.textMuted,
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: '700',
   },
   emptyState: {
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
     padding: theme.spacing.lg,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    backgroundColor: theme.colors.card,
+    backgroundColor: theme.colors.surfaceGlass,
     gap: 8,
   },
   emptyTitle: {
     color: theme.colors.text,
-    fontWeight: '700',
+    fontWeight: '900',
     fontSize: 18,
   },
   emptyBody: {

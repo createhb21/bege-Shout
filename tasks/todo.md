@@ -32,3 +32,5 @@
 - Follow-up bugfix: changed capture recording to require only camera+microphone permissions, because Expo Go may limit media-library/notification capability and should not block recording.
 - Follow-up UI improvement: capture tab is now full-screen camera/video with high-contrast overlay controls for wake time, note, save/share options, and recording actions.
 - Follow-up UI reduction: capture screen now removes message/share/album controls, uses settings defaults, and leaves only compact wake-time plus smaller record/save controls over the selfie video.
+- Design refresh: created `DESIGN.md`, moved the app to an icon-only glass GNB, refreshed theme/UI primitives, and restyled history/challenge/community/profile/notifications/post detail around a dark reels/story-inspired visual language.
+- Design verification: `npm run typecheck`, `cd mobile && npx expo export --platform web`, and `cd mobile && npx expo-doctor` all passed after the redesign.

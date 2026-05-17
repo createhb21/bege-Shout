@@ -8,3 +8,5 @@
 - In camera screens, request permissions before checking a camera ref; without permission the preview is not mounted, so a ref-first guard makes the record button silently do nothing.
 - For camera-first mobile experiences, make the preview the full-screen base layer and float wake-time/metadata controls as high-contrast overlays; card layouts make recording feel secondary.
 - When users say the camera UI is cluttered, remove controls from capture rather than restyling them; move defaults such as sharing and album save to settings and leave only compact time plus record controls over video.
+- For social-app redesign requests, create or refresh DESIGN.md first, then centralize the visual language in theme/ui primitives before touching individual screens.
+- For Instagram-inspired requirements, copy interaction patterns only at the abstraction level (icon-only nav, reels media hierarchy, gradient rings), not exact layouts or brand assets.
