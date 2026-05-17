@@ -26,7 +26,7 @@ export function VideoPreview({
 
   return (
     <View style={[styles.container, { height }]}>
-      <VideoView style={StyleSheet.absoluteFill} player={player} allowsFullscreen nativeControls contentFit="cover" />
+      <VideoView style={StyleSheet.absoluteFill} player={player} fullscreenOptions={{ enable: true }} nativeControls contentFit="cover" />
     </View>
   );
 }

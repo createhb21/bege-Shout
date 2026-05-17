@@ -36,6 +36,7 @@ export const resources = {
         permissionsBody: 'Camera, microphone, notifications, and media access are required for recording, alarms, and offline saves.',
         requestAll: 'Allow everything',
         ready: 'Camera ready',
+        capturePermissionNeeded: 'Camera + mic needed',
         record: 'Start shout',
         stop: 'Stop recording',
         recording: 'Recording now… tell the pillow exactly when to wake you.',
@@ -48,6 +49,7 @@ export const resources = {
         savedBody: 'Your wake-up promise and challenge are ready.',
         notePlaceholder: 'Pillow, I must wake up at 7:30. No mercy tomorrow.',
         challengeHint: 'The next-morning challenge will count as success if you check in within 10 minutes after the target time.',
+        tapAgainWhenReady: 'The camera is waking up. Tap record again after the selfie preview appears.',
       },
       history: {
         title: 'Shout archive',
@@ -145,6 +147,7 @@ export const resources = {
         permissionsBody: '녹화, 알림, 오프라인 저장을 위해 카메라/마이크/알림/앨범 권한이 필요합니다.',
         requestAll: '권한 한 번에 허용',
         ready: '카메라 준비 완료',
+        capturePermissionNeeded: '카메라+마이크 필요',
         record: '샤우트 시작',
         stop: '녹화 중지',
         recording: '지금 녹화 중… 배게에게 몇 시에 깨워달라고 정확히 말해보세요.',
@@ -157,6 +160,7 @@ export const resources = {
         savedBody: '기상 미션과 챌린지 준비가 끝났어요.',
         notePlaceholder: '배게야, 내일 7시 30분에 꼭 깨워줘. 절대 봐주지 마.',
         challengeHint: '다음날 설정 시각 이후 10분 안에 체크인하면 챌린지 성공으로 계산합니다.',
+        tapAgainWhenReady: '카메라가 켜지는 중이에요. 셀카 화면이 보이면 녹화 버튼을 한 번 더 눌러주세요.',
       },
       history: {
         title: '샤우트 아카이브',

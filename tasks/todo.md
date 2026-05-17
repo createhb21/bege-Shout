@@ -29,3 +29,4 @@
 - Verified server API with `GET /health`, `GET /api/feed/posts`, `POST /api/feed/posts/:id/like`, `POST /api/feed/posts/:id/comments`, and `POST /api/shouts/upload`, then restored seed data afterward.
 - README now documents run flow, local-only constraint, device URL notes, and verification commands.
 - Remaining prototype risk: camera recording, local notifications, and permission UX were statically/bundle validated but not fully exercised on a real iOS/Android device inside this session.
+- Follow-up bugfix: changed capture recording to require only camera+microphone permissions, because Expo Go may limit media-library/notification capability and should not block recording.

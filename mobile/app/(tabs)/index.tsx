@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useIsFocused } from '@react-navigation/native';
-import { CameraView } from 'expo-camera';
+import { Camera, CameraView } from 'expo-camera';
 import { useRef, useState } from 'react';
 import { Alert, Linking, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,7 @@ export default function CaptureScreen() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView | null>(null);
-  const { permissions, requestAllPermissions, saveShout, settings } = useApp();
+  const { permissions, requestAllPermissions, saveShout, settings, syncPermissions } = useApp();
   const [wakeAt, setWakeAt] = useState(buildDefaultWakeDate());
   const [note, setNote] = useState('');
   const [shareToCommunity, setShareToCommunity] = useState(true);
@@ -25,15 +25,34 @@ export default function CaptureScreen() {
   const [isRecording, setIsRecording] = useState(false);
   const [pendingVideoUri, setPendingVideoUri] = useState<string | null>(null);
 
+  const captureGranted = permissions.camera === 'granted' && permissions.microphone === 'granted';
   const allGranted = Object.values(permissions).every((status) => status === 'granted');
 
+  const requestCapturePermissions = async () => {
+    const [cameraPermission, microphonePermission] = await Promise.all([
+      Camera.requestCameraPermissionsAsync(),
+      Camera.requestMicrophonePermissionsAsync(),
+    ]);
+    await syncPermissions();
+
+    return cameraPermission.status === 'granted' && microphonePermission.status === 'granted';
+  };
+
   const startRecording = async () => {
-    if (!cameraRef.current || isRecording) {
+    if (isRecording) {
       return;
     }
 
-    if (!allGranted) {
-      await requestAllPermissions();
+    if (!captureGranted) {
+      const granted = await requestCapturePermissions();
+      if (!granted) {
+        Alert.alert(t('capture.permissionsTitle'), t('capture.permissionsBody'));
+      }
+      return;
+    }
+
+    if (!cameraRef.current) {
+      Alert.alert(t('capture.ready'), t('capture.tapAgainWhenReady'));
       return;
     }
 
@@ -87,7 +106,7 @@ export default function CaptureScreen() {
             </View>
           )}
           <View style={styles.cameraOverlayTop}>
-            <Badge label={allGranted ? t('capture.ready') : t('common.openSettings')} tone={allGranted ? 'success' : 'warning'} />
+            <Badge label={captureGranted ? t('capture.ready') : t('capture.capturePermissionNeeded')} tone={captureGranted ? 'success' : 'warning'} />
           </View>
           <View style={styles.cameraOverlayBottom}>
             <TouchableOpacity onPress={isRecording ? stopRecording : startRecording} style={[styles.recordButton, isRecording && styles.recordingButton]}>
