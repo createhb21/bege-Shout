@@ -2,6 +2,19 @@
 
 Local-first prototype for a playful wake-up challenge app built with **Expo + React Native + TypeScript** and a **local Node API**.
 
+## Screenshots
+
+<p align="center">
+  <img src="photos/IMG_5852.PNG" alt="Screenshot 1" width="240" />
+  <img src="photos/IMG_5853.PNG" alt="Screenshot 2" width="240" />
+  <img src="photos/IMG_5854.PNG" alt="Screenshot 3" width="240" />
+</p>
+
+<p align="center">
+  <img src="photos/IMG_5855.PNG" alt="Screenshot 4" width="240" />
+  <img src="photos/IMG_5856.PNG" alt="Screenshot 5" width="240" />
+</p>
+
 ## What is implemented
 
 - **Launch-to-selfie capture flow** with front camera video recording

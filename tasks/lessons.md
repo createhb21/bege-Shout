@@ -10,3 +10,4 @@
 - When users say the camera UI is cluttered, remove controls from capture rather than restyling them; move defaults such as sharing and album save to settings and leave only compact time plus record controls over video.
 - For social-app redesign requests, create or refresh DESIGN.md first, then centralize the visual language in theme/ui primitives before touching individual screens.
 - For Instagram-inspired requirements, copy interaction patterns only at the abstraction level (icon-only nav, reels media hierarchy, gradient rings), not exact layouts or brand assets.
+- When screenshot assets already live under a repo-local `photos/` folder, expose them in the root README as a simple ordered gallery instead of leaving the project overview text-only.

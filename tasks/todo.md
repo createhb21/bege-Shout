@@ -21,6 +21,12 @@
 - [x] Use local notifications as the wake challenge trigger and a morning check-in proof flow as the measurable challenge result.
 - [x] Support offline behavior through on-device persistence plus downloadable community media files.
 
+## Current task
+
+- [x] Confirm the screenshot files under `photos/` and sort them by filename order.
+- [x] Add the screenshots to the root `README.md` in that order.
+- [x] Review the README rendering markup for a simple gallery layout.
+
 ## Review
 
 - Repository started almost empty; implemented a full Expo Router mobile prototype under `mobile/` and a local TypeScript API under `server/`.
@@ -34,3 +40,4 @@
 - Follow-up UI reduction: capture screen now removes message/share/album controls, uses settings defaults, and leaves only compact wake-time plus smaller record/save controls over the selfie video.
 - Design refresh: created `DESIGN.md`, moved the app to an icon-only glass GNB, refreshed theme/UI primitives, and restyled history/challenge/community/profile/notifications/post detail around a dark reels/story-inspired visual language.
 - Design verification: `npm run typecheck`, `cd mobile && npx expo export --platform web`, and `cd mobile && npx expo-doctor` all passed after the redesign.
+- README update: added a `Screenshots` section to the root README using the five `photos/IMG_5852.PNG` through `photos/IMG_5856.PNG` assets in filename order.
